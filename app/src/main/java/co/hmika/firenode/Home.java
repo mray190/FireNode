@@ -34,6 +34,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private boolean bgBound;
     public static FragmentManager fragmentManager;
     public Fragment currFragment;
+    private boolean loggingEnabled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,16 +42,26 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        loggingEnabled = false;
 
         fragmentManager = getSupportFragmentManager();
         currFragment = fragmentManager.findFragmentById(R.id.main_frag);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Use Firebase", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                loggingEnabled = !loggingEnabled;
+                if (loggingEnabled) {
+                    fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_dis_log));
+                    ((FireNode)getApplication()).startLocationUpdates();
+                    Snackbar.make(view, "Enabling logging", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                } else {
+                    fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_log));
+                    ((FireNode)getApplication()).stopLocationUpdates();
+                    Snackbar.make(view, "Disabling logging", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+
+                }
             }
         });
 
