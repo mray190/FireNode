@@ -1,15 +1,15 @@
 package co.hmika.firenode;
 
 import android.Manifest;
-import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
-import android.net.wifi.ScanResult;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.Messenger;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -25,13 +25,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import java.util.List;
-
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private WifiManager mainWifiObj;
     private static final int LOCATION_PERMISSION_IDENTIFIER = 0;
-    private FirebaseManager fb;
-    private WifiHandler wifiReciever;
+    private Messenger bgMessenger;
+    private boolean bgBound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,46 +55,22 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        mainWifiObj = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        mainWifiObj.createWifiLock(WifiManager.WIFI_MODE_SCAN_ONLY,"scan_wifi_lock");
-        fb = new FirebaseManager();
-        wifiReciever = new WifiHandler();
-        registerReceiver(wifiReciever, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        if (!hasLocationPermissions()) requestLocationPermissionsBeforeStart();
+        if (!locationSettingsEnabled()) startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+        ((FireNode) getApplication()).startLocationUpdates();
+        bindService(new Intent(this, BackgroundTasks.class), bgConnection, Context.BIND_AUTO_CREATE);
     }
 
-    protected void onPause() {
-//        unregisterReceiver(wifiReciever);
-        super.onPause();
-    }
-
-    protected void onResume() {
-        super.onResume();
-    }
-
-    private class WifiHandler extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (hasLocationPermissions()) {
-                if (locationSettingsEnabled()) {
-                    List<ScanResult> wifiScanList = mainWifiObj.getScanResults();
-                    for (int i=0; i<wifiScanList.size(); i++) {
-                        DataPacket dp = new DataPacket();
-                        dp.wifi_bssid = wifiScanList.get(i).BSSID;
-                        dp.wifi_strength = wifiScanList.get(i).level;
-                        dp.wifi_freq = wifiScanList.get(i).frequency;
-                        dp.wifi_ssid = wifiScanList.get(i).SSID;
-                        fb.sendEvent(dp, i);
-//                        mainWifiObj.calculateSignalLevel();
-                    }
-                } else {
-                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                }
-            } else {
-                requestLocationPermissionsBeforeStart();
-            }
-
+    private ServiceConnection bgConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            bgMessenger = new Messenger(service);
+            bgBound = true;
         }
-    }
+        public void onServiceDisconnected(ComponentName className) {
+            bgMessenger = null;
+            bgBound = false;
+        }
+    };
 
     private void requestLocationPermissionsBeforeStart() {
         ActivityCompat.requestPermissions(

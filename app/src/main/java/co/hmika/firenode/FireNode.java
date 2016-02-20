@@ -1,13 +1,13 @@
 package co.hmika.firenode;
 
-import android.app.Application;
+import android.content.Intent;
+import android.support.multidex.MultiDexApplication;
 
 import com.firebase.client.Firebase;
 
-/**
- * Created by mray on 2/20/16.
- */
-public class FireNode extends Application {
+public class FireNode extends MultiDexApplication {
+
+    private Intent background_service;
 
     public FireNode() { }
 
@@ -15,5 +15,14 @@ public class FireNode extends Application {
     public void onCreate() {
         super.onCreate();
         Firebase.setAndroidContext(this);
+        background_service = new Intent(getBaseContext(), BackgroundTasks.class);
+    }
+
+    public void startLocationUpdates() {
+        startService(background_service);
+    }
+
+    public void stopLocationUpdates() {
+        stopService(background_service);
     }
 }
