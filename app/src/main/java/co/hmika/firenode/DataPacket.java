@@ -9,4 +9,6 @@ public class DataPacket {
     public String wifi_mac;
     public String wifi_bssid;
     public String wifi_gate;
+    public int wifi_freq;
+    public String wifi_ssid;
 }

@@ -18,9 +18,9 @@ public class FirebaseManager {
         });
     }
 
-    public void sendEvent(DataPacket packet) {
+    public void sendEvent(DataPacket packet, long timestamp) {
         long unixTime = System.currentTimeMillis() / 1000L;
-        Firebase curr_ref = ref.child(Long.toString(unixTime));
+        Firebase curr_ref = ref.child(Long.toString(timestamp));
         curr_ref.setValue(packet);
     }
 }

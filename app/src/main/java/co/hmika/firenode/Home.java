@@ -1,15 +1,21 @@
 package co.hmika.firenode;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -24,6 +30,8 @@ import java.util.List;
 
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private WifiManager mainWifiObj;
+    private static final int LOCATION_PERMISSION_IDENTIFIER = 0;
+    private FirebaseManager fb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,20 +62,67 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     }
 
     private void setupWifiListener() {
-        FirebaseManager fb = new FirebaseManager();
         mainWifiObj = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        fb = new FirebaseManager();
         WifiHandler wifiReciever = new WifiHandler();
         registerReceiver(wifiReciever, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-        DataPacket dp = new DataPacket();
-        fb.sendEvent(dp);
     }
 
-    public class WifiHandler extends BroadcastReceiver {
+    private class WifiHandler extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            List<ScanResult> wifiScanList = mainWifiObj.getScanResults();
-            String data = wifiScanList.get(0).toString();
-            Log.d("FireNode",data);
+            if (hasLocationPermissions()) {
+                if (locationSettingsEnabled()) {
+                    List<ScanResult> wifiScanList = mainWifiObj.getScanResults();
+                    for (int i=0; i<wifiScanList.size(); i++) {
+                        String data = wifiScanList.get(i).toString();
+                        DataPacket dp = new DataPacket();
+                        dp.wifi_bssid = wifiScanList.get(i).BSSID;
+                        dp.wifi_strength = wifiScanList.get(i).level;
+                        dp.wifi_freq = wifiScanList.get(i).frequency;
+                        dp.wifi_ssid = wifiScanList.get(i).SSID;
+                        fb.sendEvent(dp, wifiScanList.get(i).timestamp);
+                    }
+                } else {
+                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                }
+            } else {
+                requestLocationPermissionsBeforeStart();
+            }
+
+        }
+    }
+
+    private void requestLocationPermissionsBeforeStart() {
+        ActivityCompat.requestPermissions(
+                this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                LOCATION_PERMISSION_IDENTIFIER
+        );
+    }
+
+    private boolean hasLocationPermissions() {
+        return (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED);
+    }
+
+    private boolean locationSettingsEnabled() {
+        if (Build.VERSION.SDK_INT >= 19) {
+            try {
+                int locationMode = Settings.Secure.getInt(
+                        getContentResolver(),
+                        Settings.Secure.LOCATION_MODE
+                );
+                return locationMode != 0;
+            } catch (Settings.SettingNotFoundException e) {
+                return false;
+            }
+        } else {
+            String locationProviders = Settings.Secure.getString(
+                    getContentResolver(),
+                    Settings.Secure.LOCATION_PROVIDERS_ALLOWED
+            );
+            return !(locationProviders == null || locationProviders.equals(""));
         }
     }
 
