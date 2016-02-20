@@ -51,14 +51,14 @@ import java.util.ArrayList;
                 holder = (DebugHolder)row.getTag();
             }
             final DataPacket packet = data.get(position);
-            holder.lat.setText(df.format(packet.gps_lat));
-            holder.lon.setText(df.format(packet.gps_lon));
-            holder.accuracy.setText(Double.toString(packet.gps_acc));
-            holder.sig_strength.setText(Double.toString(packet.wifi_strength));
-            holder.bssid.setText(packet.wifi_bssid);
-            holder.gate_id.setText(packet.wifi_gate);
-            holder.freq.setText(packet.wifi_freq);
-            holder.ssid.setText(packet.wifi_ssid);
+            holder.lat.setText("Lat: " + df.format(packet.gps_lat));
+            holder.lon.setText("Lon: " + df.format(packet.gps_lon));
+            holder.accuracy.setText("Acc: " + Double.toString(packet.gps_acc));
+            holder.sig_strength.setText(Double.toString(packet.wifi_strength) + " dBm");
+            holder.bssid.setText("BSSID: " + packet.wifi_bssid);
+            holder.gate_id.setText("Gate: " + packet.wifi_gate);
+            holder.freq.setText(packet.wifi_freq + " MHz");
+            holder.ssid.setText("SSID: " + packet.wifi_ssid);
             return row;
         }
 
