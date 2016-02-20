@@ -1,7 +1,5 @@
 package co.hmika.firenode;
 
-import android.util.Log;
-
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -15,9 +13,7 @@ public class FirebaseManager {
         ref = new Firebase("https://firenodemhacks.firebaseio.com/");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot snap) {
-                Log.d("FireNode","" + snap.getValue());
-            }
+            public void onDataChange(DataSnapshot snap) { }
             @Override public void onCancelled(FirebaseError error) { }
         });
     }

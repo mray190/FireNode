@@ -1,7 +1,10 @@
 package co.hmika.firenode;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,12 +15,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-public class Home extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+import java.util.List;
+
+public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private WifiManager mainWifiObj;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +55,20 @@ public class Home extends AppCompatActivity
 
     private void setupWifiListener() {
         FirebaseManager fb = new FirebaseManager();
-        WifiManager mainWifiObj;
         mainWifiObj = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         WifiHandler wifiReciever = new WifiHandler();
         registerReceiver(wifiReciever, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-
         DataPacket dp = new DataPacket();
         fb.sendEvent(dp);
+    }
+
+    public class WifiHandler extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            List<ScanResult> wifiScanList = mainWifiObj.getScanResults();
+            String data = wifiScanList.get(0).toString();
+            Log.d("FireNode",data);
+        }
     }
 
     @Override
