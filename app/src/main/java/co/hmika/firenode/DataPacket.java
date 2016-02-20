@@ -1,7 +1,7 @@
 package co.hmika.firenode;
 
 public class DataPacket {
-    public int userID;
+    public String userID;
     public double gps_lat;
     public double gps_lon;
     public double gps_acc;

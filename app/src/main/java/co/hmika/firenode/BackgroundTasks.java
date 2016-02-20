@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.location.Location;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -143,6 +144,9 @@ public class BackgroundTasks extends Service implements GoogleApiClient.Connecti
             for (int i=0; i<wifiScanList.size(); i++) {
                 if (wifiScanList.get(i).SSID.equals("MWireless") || wifiScanList.get(i).SSID.equals("MHacks")) {
                     DataPacket dp = new DataPacket();
+                    String manufacturer = Build.MANUFACTURER;
+                    String model = Build.MODEL;
+                    dp.userID = manufacturer + " " + model;
                     dp.gps_acc = myLocation.getAccuracy();
                     dp.gps_lat = myLocation.getLatitude();
                     dp.gps_lon = myLocation.getLongitude();
