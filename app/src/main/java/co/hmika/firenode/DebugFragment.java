@@ -20,17 +20,11 @@ import java.util.ArrayList;
 public class DebugFragment extends ListFragment implements AdapterView.OnItemClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_debug, container, false);
-        return view;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
         ArrayList<DataPacket> arrayList = new ArrayList<>();
         DebugAdapter adapter = new DebugAdapter(getActivity(), arrayList, android.R.layout.simple_list_item_1);
         setListAdapter(adapter);
         getListView().setOnItemClickListener(this);
+        return super.onCreateView(inflater,container,savedInstanceState)
     }
 
     @Override

@@ -29,7 +29,7 @@ import android.view.View;
 
 import co.hmika.firenode.dummy.DummyContent;
 
-public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DebugFragment.OnListFragmentInteractionListener {
+public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final int LOCATION_PERMISSION_IDENTIFIER = 0;
     private Messenger bgMessenger;
     private boolean bgBound;
