@@ -12,24 +12,27 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
-public class MapsFragment extends Fragment {
+public class MapsFragment extends Fragment implements GoogleMap.OnMyLocationButtonClickListener {
 
     private GoogleMap mMap;
-    private Location myLocation;
-    private boolean mapSet;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater,container,savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
-        super.onCreate(savedInstanceState);
-        mapSet = false;
         setUpMapIfNeeded();
         return view;
     }
 
     private void setUpMapIfNeeded() {
         if (mMap == null) {
-            mMap = ((SupportMapFragment) Home.fragmentManager.findFragmentById(R.id.location_map)).getMap();
+            mMap = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.location_map)).getMap();
+            mMap.setOnMyLocationButtonClickListener(this);
             mMap.setMyLocationEnabled(true);
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(42.276946, -83.738220), 14));
         }
@@ -43,4 +46,8 @@ public class MapsFragment extends Fragment {
         }
     }
 
+    @Override
+    public boolean onMyLocationButtonClick() {
+        return false;
+    }
 }

@@ -33,7 +33,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private static final int LOCATION_PERMISSION_IDENTIFIER = 0;
     private Messenger bgMessenger;
     private boolean bgBound;
-    static public FragmentManager fragmentManager;
+    public static FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,13 +165,11 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             MapsFragment fragment = new MapsFragment();
             fragmentTransaction.replace(R.id.main_frag, fragment);
             fragmentTransaction.commit();
-            return true;
         }
         else if (id == R.id.debug) {
             DebugFragment fragment = new DebugFragment();
             fragmentTransaction.replace(R.id.main_frag, fragment);
             fragmentTransaction.commit();
-            return true;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
