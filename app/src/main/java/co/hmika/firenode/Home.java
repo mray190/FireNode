@@ -10,7 +10,9 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Message;
 import android.os.Messenger;
+import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
@@ -26,6 +28,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -131,6 +134,16 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             bgBound = false;
         }
     };
+
+    public void sendBackgroundMessage(int msgCode) {
+        if (!bgBound) return;
+        Message msg = Message.obtain(null, msgCode, 0);
+        try {
+            bgMessenger.send(msg);
+        } catch (RemoteException e) {
+            Log.e("FireNode", e.getMessage());
+        }
+    }
 
     private void requestLocationPermissionsBeforeStart() {
         ActivityCompat.requestPermissions(

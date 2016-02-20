@@ -35,7 +35,8 @@ public class MapsFragment extends Fragment implements GoogleMap.OnMyLocationButt
             mMap.setOnMyLocationButtonClickListener(this);
             mMap.setMyLocationEnabled(true);
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(42.276946, -83.738220), 16));
-            mMap.setPadding(0,120,0,0);
+            mMap.setPadding(0, 120, 0, 0);
+            ((FireNode)getActivity().getApplication()).map = mMap;
         }
     }
 
@@ -44,6 +45,7 @@ public class MapsFragment extends Fragment implements GoogleMap.OnMyLocationButt
         super.onDestroyView();
         if (mMap != null) {
             mMap = null;
+            ((FireNode)getActivity().getApplication()).map = null;
         }
     }
 

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.multidex.MultiDexApplication;
 
 import com.firebase.client.Firebase;
+import com.google.android.gms.maps.GoogleMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ public class FireNode extends MultiDexApplication {
     private Activity currActivity;
 
     public HashMap<String, Router> router_list;
+    public GoogleMap map;
 
     public FireNode() { router_list = new HashMap<>(); }
 
