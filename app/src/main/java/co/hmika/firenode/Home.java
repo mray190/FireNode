@@ -63,8 +63,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         fragmentTransaction.add(R.id.placeholder, fragment).commit();
         currFragment = fragment;
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        currFragment = fragmentManager.findFragmentById(R.id.main_frag);
+        currFragment = fragmentManager.findFragmentById(R.id.placeholder);
         fab = (FloatingActionButton) findViewById(R.id.fab);
         if (sharedPref.getBoolean("logging",false)) fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_dis_log));
         else fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_log));
@@ -207,10 +206,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         if (id == R.id.live_view) {
             MapsFragment fragment = new MapsFragment();
-//            Fragment oldFragment = getSupportFragmentManager().findFragmentById(R.id.main_frag);
-//            if(fragment != null) {
-//                fragmentTransaction.remove(oldFragment);}
-        currFragment = fragment;
             fragmentTransaction.replace(R.id.placeholder, fragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
@@ -218,9 +213,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         else if (id == R.id.debug) {
             DebugFragment fragment = new DebugFragment();
             currFragment = fragment;
-//            Fragment oldFragment = getSupportFragmentManager().findFragmentById(R.id.main_frag);
-//            if(fragment != null) {
-//                fragmentTransaction.remove(oldFragment);}
             fragmentTransaction.replace(R.id.placeholder, fragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
