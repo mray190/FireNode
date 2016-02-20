@@ -7,13 +7,16 @@ import android.support.multidex.MultiDexApplication;
 import com.firebase.client.Firebase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class FireNode extends MultiDexApplication {
 
     private Intent background_service;
     private Activity currActivity;
 
-    public FireNode() { }
+    public HashMap<String, Router> router_list;
+
+    public FireNode() { router_list = new HashMap<>(); }
 
     @Override
     public void onCreate() {

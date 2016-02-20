@@ -63,8 +63,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         fragmentTransaction.add(R.id.placeholder, fragment).commit();
         currFragment = fragment;
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        currFragment = fragmentManager.findFragmentById(R.id.main_frag);
+        currFragment = fragmentManager.findFragmentById(R.id.placeholder);
         fab = (FloatingActionButton) findViewById(R.id.fab);
         if (sharedPref.getBoolean("logging",false)) fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_dis_log));
         else fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_log));

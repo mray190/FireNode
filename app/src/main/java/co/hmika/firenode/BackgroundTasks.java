@@ -69,7 +69,7 @@ public class BackgroundTasks extends Service implements GoogleApiClient.Connecti
 
         mainWifiObj = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         mainWifiObj.createWifiLock(WifiManager.WIFI_MODE_SCAN_ONLY,"scan_wifi_lock");
-        fb = new FirebaseManager();
+        fb = new FirebaseManager((FireNode)getApplication());
         wifiReciever = new WifiHandler();
         wifiInfoHandler = new WifiInfoHandler();
     }
