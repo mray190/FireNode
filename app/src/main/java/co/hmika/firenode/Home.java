@@ -42,7 +42,8 @@ public class Home extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         FirebaseManager fb = new FirebaseManager();
-        fb.sendEvent();
+        DataPacket dp = new DataPacket();
+        fb.sendEvent(dp);
     }
 
     @Override
