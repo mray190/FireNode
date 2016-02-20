@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:id="@+id/debug_list_layout">
+    android:layout_height="wrap_content" android:id="@+id/debug_list_layout">
 
 
     <LinearLayout
@@ -10,47 +10,56 @@
         <TextView
             android:id="@+id/debug_lat"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginRight="1dp"/>
         <TextView
             android:id="@+id/debug_long"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginRight="1dp"/>
+        <TextView
+            android:id="@+id/debug_acc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="1dp"/>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/debug_acc"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" android:orientation="horizontal">
         <TextView
             android:id="@+id/debug_freq"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="1dp"/>
         <TextView
             android:id="@+id/debug_wifi_strenght"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="1dp"/>
+        <TextView
+            android:id="@+id/debug_bssid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="1dp"/>
     </LinearLayout>
-    <TextView
-        android:id="@+id/debug_bssid"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" android:orientation="horizontal">
 
         <TextView
             android:id="@+id/debug_gate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="1dp"/>
 
         <TextView
             android:id="@+id/debug_ssid"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="1dp"/>
     </LinearLayout>
 
 </LinearLayout>
