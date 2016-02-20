@@ -25,6 +25,6 @@ public class FirebaseManager {
     public void sendEvent(DataPacket packet) {
         long unixTime = System.currentTimeMillis() / 1000L;
         Firebase curr_ref = ref.child(Long.toString(unixTime));
-        packet.send(curr_ref);
+        curr_ref.setValue(packet);
     }
 }
