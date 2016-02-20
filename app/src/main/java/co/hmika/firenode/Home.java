@@ -44,7 +44,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         fragmentManager = getSupportFragmentManager();
         currFragment = fragmentManager.findFragmentById(R.id.main_frag);
-        ((FireNode)getApplication()).setCurrActivity(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -68,6 +67,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         if (!locationSettingsEnabled()) startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
         ((FireNode) getApplication()).startLocationUpdates();
         bindService(new Intent(this, BackgroundTasks.class), bgConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ((FireNode)getApplication()).setCurrActivity(this);
     }
 
     @Override
