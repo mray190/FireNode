@@ -1,14 +1,11 @@
 package co.hmika.firenode;
 
-import android.app.Activity;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
-import android.location.LocationListener;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -22,6 +19,7 @@ import android.util.Log;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognition;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
@@ -60,8 +58,6 @@ public class BackgroundTasks extends Service implements GoogleApiClient.Connecti
         mainWifiObj.createWifiLock(WifiManager.WIFI_MODE_SCAN_ONLY,"scan_wifi_lock");
         fb = new FirebaseManager();
         wifiReciever = new WifiHandler();
-        registerReceiver(wifiReciever, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-        locationClient.connect();
     }
 
     @Override
@@ -88,7 +84,7 @@ public class BackgroundTasks extends Service implements GoogleApiClient.Connecti
             myLocation.setLatitude(42.2912);
             myLocation.setLongitude(-83.7161);
         }
-        LocationServices.FusedLocationApi.requestLocationUpdates(locationClient, locationRequest, (com.google.android.gms.location.LocationListener) this);
+        LocationServices.FusedLocationApi.requestLocationUpdates(locationClient, locationRequest, this);
     }
 
     @Override
@@ -155,6 +151,7 @@ public class BackgroundTasks extends Service implements GoogleApiClient.Connecti
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("FireNode", "Info - Background Tasks service started");
         locationClient.connect();
+        registerReceiver(wifiReciever, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
         return Service.START_NOT_STICKY;
     }
 
@@ -168,13 +165,4 @@ public class BackgroundTasks extends Service implements GoogleApiClient.Connecti
     public void onLocationChanged(Location location) {
         this.myLocation = location;
     }
-
-    @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) { }
-
-    @Override
-    public void onProviderEnabled(String s) { }
-
-    @Override
-    public void onProviderDisabled(String s) { }
 }

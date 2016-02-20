@@ -61,6 +61,16 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         bindService(new Intent(this, BackgroundTasks.class), bgConnection, Context.BIND_AUTO_CREATE);
     }
 
+    @Override
+    protected void onDestroy() {
+        ((FireNode)getApplication()).stopLocationUpdates();
+        if (bgBound) {
+            unbindService(bgConnection);
+            bgBound = false;
+        }
+        super.onDestroy();
+    }
+
     private ServiceConnection bgConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
             bgMessenger = new Messenger(service);
