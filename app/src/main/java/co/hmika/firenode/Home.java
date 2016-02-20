@@ -1,5 +1,7 @@
 package co.hmika.firenode;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -28,7 +30,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.content_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -52,6 +54,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         setupWifiListener();
     }
+
 
     private void setupWifiListener() {
         FirebaseManager fb = new FirebaseManager();
@@ -108,11 +111,19 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        if (id == R.id.action_settings) {
+        if (id == R.id.live_view) {
+            MapsFragment fragment = new MapsFragment();
+            fragmentTransaction.replace(R.id.fragment_home, fragment);
+            fragmentTransaction.commit();
             return true;
         }
-        if (id == R.id.action_settings) {
+        else if (id == R.id.debug) {
+            DebugFragment fragment = new DebugFragment();
+            fragmentTransaction.replace(R.id.fragment_home, fragment);
+            fragmentTransaction.commit();
             return true;
         }
 
