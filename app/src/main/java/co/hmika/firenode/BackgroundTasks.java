@@ -23,6 +23,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BackgroundTasks extends Service implements GoogleApiClient.ConnectionCallbacks, LocationListener, GoogleApiClient.OnConnectionFailedListener {
@@ -131,6 +132,7 @@ public class BackgroundTasks extends Service implements GoogleApiClient.Connecti
         @Override
         public void onReceive(Context context, Intent intent) {
             List<ScanResult> wifiScanList = mainWifiObj.getScanResults();
+            ArrayList<DataPacket> dparray = new ArrayList<>();
             if (myLocation==null) return;
             for (int i=0; i<wifiScanList.size(); i++) {
                 DataPacket dp = new DataPacket();
@@ -141,9 +143,11 @@ public class BackgroundTasks extends Service implements GoogleApiClient.Connecti
                 dp.wifi_strength = wifiScanList.get(i).level;
                 dp.wifi_freq = wifiScanList.get(i).frequency;
                 dp.wifi_ssid = wifiScanList.get(i).SSID;
+                dparray.add(dp);
                 fb.sendEvent(dp, i);
 //                        mainWifiObj.calculateSignalLevel();
             }
+            ((FireNode)context.getApplicationContext()).setDatapacketArray(dparray);
         }
     }
 

@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -14,17 +13,18 @@ import java.util.ArrayList;
 /**
  * A fragment representing a list of Items.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
 public class DebugFragment extends ListFragment implements AdapterView.OnItemClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ArrayList<DataPacket> arrayList = new ArrayList<>();
-        DebugAdapter adapter = new DebugAdapter(getActivity(), R.layout.debug_list, arrayList);
-        setListAdapter(adapter);
-        getListView().setOnItemClickListener(this);
+//        getListView().setOnItemClickListener(this);
         return super.onCreateView(inflater,container,savedInstanceState);
+    }
+
+    public void updateArray(ArrayList<DataPacket> newData) {
+        DebugAdapter adapter = new DebugAdapter(getActivity(), R.layout.debug_list,newData);
+        setListAdapter(adapter);
     }
 
     @Override
