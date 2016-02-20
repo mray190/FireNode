@@ -144,8 +144,10 @@ public class BackgroundTasks extends Service implements GoogleApiClient.Connecti
                 dp.wifi_freq = wifiScanList.get(i).frequency;
                 dp.wifi_ssid = wifiScanList.get(i).SSID;
                 if (dp.wifi_ssid.equals("MWireless") ||dp.wifi_ssid.equals("MHacks")) {
+                    double exp = (27.55-(20.0*Math.log10(dp.wifi_freq))+Math.abs(dp.wifi_strength))/20.0;
+                    dp.wifi_dist = Math.pow(10,exp);
                     dparray.add(dp);
-                    fb.sendEvent(dp, i);
+                    fb.sendEvent(dp);
                 }
 //                        mainWifiObj.calculateSignalLevel();
             }
