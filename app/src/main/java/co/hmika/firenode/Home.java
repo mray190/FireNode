@@ -43,7 +43,11 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         setSupportActionBar(toolbar);
 
         fragmentManager = getSupportFragmentManager();
-        currFragment = fragmentManager.findFragmentById(R.id.main_frag);
+
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        MapsFragment fragment = new MapsFragment();
+        fragmentTransaction.add(R.id.placeholder, fragment).commit();
+        currFragment = fragment;
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -176,18 +180,21 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         if (id == R.id.live_view) {
             MapsFragment fragment = new MapsFragment();
-            Fragment oldFragment = getSupportFragmentManager().findFragmentById(R.id.main_frag);
-            if(fragment != null) {
-                fragmentTransaction.remove(oldFragment);}
+//            Fragment oldFragment = getSupportFragmentManager().findFragmentById(R.id.main_frag);
+//            if(fragment != null) {
+//                fragmentTransaction.remove(oldFragment);}
         currFragment = fragment;
-            fragmentTransaction.add(R.id.main_frag, fragment);
+            fragmentTransaction.replace(R.id.placeholder, fragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         }
         else if (id == R.id.debug) {
             DebugFragment fragment = new DebugFragment();
             currFragment = fragment;
-            fragmentTransaction.replace(R.id.main_frag, fragment);
+//            Fragment oldFragment = getSupportFragmentManager().findFragmentById(R.id.main_frag);
+//            if(fragment != null) {
+//                fragmentTransaction.remove(oldFragment);}
+            fragmentTransaction.replace(R.id.placeholder, fragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         }

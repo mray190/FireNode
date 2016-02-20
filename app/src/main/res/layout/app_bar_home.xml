@@ -22,9 +22,8 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <fragment
-        android:id="@+id/main_frag"
-        android:name="co.hmika.firenode.DebugFragment"
+    <RelativeLayout
+        android:id="@+id/placeholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true" />

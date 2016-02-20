@@ -23,7 +23,7 @@ public class DebugFragment extends ListFragment implements AdapterView.OnItemCli
     }
 
     public void updateArray(ArrayList<DataPacket> newData) {
-        DebugAdapter adapter = new DebugAdapter(getActivity(), R.layout.debug_list,newData);
+        DebugAdapter adapter = new DebugAdapter(getActivity(), R.layout.fragment_debug,newData);
         setListAdapter(adapter);
     }
 
