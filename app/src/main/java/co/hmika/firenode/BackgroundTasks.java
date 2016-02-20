@@ -147,7 +147,7 @@ public class BackgroundTasks extends Service implements GoogleApiClient.Connecti
                 fb.sendEvent(dp, i);
 //                        mainWifiObj.calculateSignalLevel();
             }
-            ((FireNode)context.getApplicationContext()).setDatapacket_array(dparray);
+            ((FireNode)context.getApplicationContext()).setDatapacketArray(dparray);
         }
     }
 

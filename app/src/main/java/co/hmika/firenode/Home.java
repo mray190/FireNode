@@ -15,6 +15,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -27,13 +28,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import co.hmika.firenode.dummy.DummyContent;
-
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final int LOCATION_PERMISSION_IDENTIFIER = 0;
     private Messenger bgMessenger;
     private boolean bgBound;
     public static FragmentManager fragmentManager;
+    public Fragment currFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +43,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         setSupportActionBar(toolbar);
 
         fragmentManager = getSupportFragmentManager();
+        currFragment = fragmentManager.findFragmentById(R.id.main_frag);
+        ((FireNode)getApplication()).setCurrActivity(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -66,6 +68,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         if (!locationSettingsEnabled()) startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
         ((FireNode) getApplication()).startLocationUpdates();
         bindService(new Intent(this, BackgroundTasks.class), bgConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onPause() {
+        ((FireNode)getApplication()).setCurrActivity(null);
+        super.onPause();
     }
 
     @Override
@@ -163,24 +171,19 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         if (id == R.id.live_view) {
             MapsFragment fragment = new MapsFragment();
+            currFragment = fragment;
             fragmentTransaction.replace(R.id.main_frag, fragment);
             fragmentTransaction.commit();
-            return true;
         }
         else if (id == R.id.debug) {
             DebugFragment fragment = new DebugFragment();
+            currFragment = fragment;
             fragmentTransaction.replace(R.id.main_frag, fragment);
             fragmentTransaction.commit();
-            return true;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
-
     }
 }
