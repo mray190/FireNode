@@ -29,11 +29,11 @@ import android.view.View;
 
 import co.hmika.firenode.dummy.DummyContent;
 
-public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DebugFragment.OnListFragmentInteractionListener {
+public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final int LOCATION_PERMISSION_IDENTIFIER = 0;
     private Messenger bgMessenger;
     private boolean bgBound;
-    static public FragmentManager fragmentManager;
+    public static FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +43,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         setSupportActionBar(toolbar);
 
         fragmentManager = getSupportFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        DebugFragment fragment = new DebugFragment();
-//        fragmentTransaction.add(R.id.main_frag, fragment);
-//        fragmentTransaction.commit();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -169,16 +165,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             MapsFragment fragment = new MapsFragment();
             fragmentTransaction.replace(R.id.main_frag, fragment);
             fragmentTransaction.commit();
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);
             return true;
         }
         else if (id == R.id.debug) {
             DebugFragment fragment = new DebugFragment();
             fragmentTransaction.replace(R.id.main_frag, fragment);
             fragmentTransaction.commit();
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);
             return true;
         }
 
