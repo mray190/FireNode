@@ -40,7 +40,7 @@ import java.util.ArrayList;
                 holder = new DebugHolder();
                 holder.lat = (TextView)row.findViewById(R.id.debug_lat);
                 holder.lon = (TextView)row.findViewById(R.id.debug_long);
-                holder.accuracy = (CheckBox)row.findViewById(R.id.debug_acc);
+                holder.accuracy = (TextView)row.findViewById(R.id.debug_acc);
                 holder.sig_strength = (TextView)row.findViewById(R.id.debug_wifi_strenght);
                 holder.bssid = (TextView)row.findViewById(R.id.debug_bssid);
                 holder.gate_id = (TextView)row.findViewById(R.id.debug_gate);

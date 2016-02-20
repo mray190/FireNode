@@ -21,7 +21,7 @@ public class DebugFragment extends ListFragment implements AdapterView.OnItemCli
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ArrayList<DataPacket> arrayList = new ArrayList<>();
-        DebugAdapter adapter = new DebugAdapter(getActivity(), arrayList, android.R.layout.simple_list_item_1);
+        DebugAdapter adapter = new DebugAdapter(getActivity(), R.layout.debug_list, arrayList);
         setListAdapter(adapter);
         getListView().setOnItemClickListener(this);
         return super.onCreateView(inflater,container,savedInstanceState);
