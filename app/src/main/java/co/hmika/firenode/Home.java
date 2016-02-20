@@ -27,8 +27,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import co.hmika.firenode.dummy.DummyContent;
-
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final int LOCATION_PERMISSION_IDENTIFIER = 0;
     private Messenger bgMessenger;
@@ -179,8 +177,4 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         return true;
     }
 
-    @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
-
-    }
 }
