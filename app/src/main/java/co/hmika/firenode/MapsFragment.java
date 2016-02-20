@@ -29,7 +29,7 @@ public class MapsFragment extends Fragment {
 
     private void setUpMapIfNeeded() {
         if (mMap == null) {
-            mMap = ((SupportMapFragment) Home.fragmentManager.findFragmentById(R.id.location_map)).getMap();
+            mMap = ((SupportMapFragment) Home.fragmentManager.findFragmentById(R.id.main_frag)).getMap();
             mMap.setMyLocationEnabled(true);
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(42.276946, -83.738220), 14));
         }

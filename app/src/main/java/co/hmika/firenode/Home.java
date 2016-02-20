@@ -43,6 +43,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         setSupportActionBar(toolbar);
 
         fragmentManager = getSupportFragmentManager();
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        DebugFragment fragment = new DebugFragment();
+//        fragmentTransaction.add(R.id.main_frag, fragment);
+//        fragmentTransaction.commit();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -165,12 +169,16 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             MapsFragment fragment = new MapsFragment();
             fragmentTransaction.replace(R.id.main_frag, fragment);
             fragmentTransaction.commit();
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
             return true;
         }
         else if (id == R.id.debug) {
             DebugFragment fragment = new DebugFragment();
             fragmentTransaction.replace(R.id.main_frag, fragment);
             fragmentTransaction.commit();
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
             return true;
         }
 
