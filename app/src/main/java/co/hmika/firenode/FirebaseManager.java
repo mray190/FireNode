@@ -1,9 +1,6 @@
 package co.hmika.firenode;
 
-import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 
 public class FirebaseManager {
 
@@ -11,16 +8,11 @@ public class FirebaseManager {
 
     public FirebaseManager() {
         ref = new Firebase("https://firenodemhacks.firebaseio.com/");
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snap) { }
-            @Override public void onCancelled(FirebaseError error) { }
-        });
     }
 
     public void sendEvent(DataPacket packet) {
         long unixTime = System.currentTimeMillis() / 1000L;
-        Firebase curr_ref = ref.child(Long.toString(unixTime)).child(packet.wifi_bssid);
+        Firebase curr_ref = ref.child("raw_data").child(Long.toString(unixTime)).child(packet.wifi_bssid);
         curr_ref.setValue(packet);
     }
 }
