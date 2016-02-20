@@ -5,11 +5,13 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Messenger;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -34,7 +36,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private boolean bgBound;
     public static FragmentManager fragmentManager;
     public Fragment currFragment;
-    private boolean loggingEnabled;
+    private SharedPreferences sharedPref;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,26 +45,25 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        loggingEnabled = false;
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         fragmentManager = getSupportFragmentManager();
         currFragment = fragmentManager.findFragmentById(R.id.main_frag);
-
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        if (sharedPref.getBoolean("logging",false)) fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_dis_log));
+        else fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_log));
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loggingEnabled = !loggingEnabled;
-                if (loggingEnabled) {
+                boolean logging = !sharedPref.getBoolean("logging",false);
+                if (logging) {
                     fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_dis_log));
-                    ((FireNode)getApplication()).startLocationUpdates();
                     Snackbar.make(view, "Enabling logging", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 } else {
                     fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_log));
-                    ((FireNode)getApplication()).stopLocationUpdates();
                     Snackbar.make(view, "Disabling logging", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-
                 }
+                sharedPref.edit().putBoolean("logging",logging).apply();
             }
         });
 
