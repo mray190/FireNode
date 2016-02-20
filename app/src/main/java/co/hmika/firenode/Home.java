@@ -27,7 +27,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+import co.hmika.firenode.dummy.DummyContent;
+
+public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DebugFragment.OnListFragmentInteractionListener {
     private static final int LOCATION_PERMISSION_IDENTIFIER = 0;
     private Messenger bgMessenger;
     private boolean bgBound;
@@ -36,12 +38,11 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.app_bar_home);
+        setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         fragmentManager = getSupportFragmentManager();
-
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -162,13 +163,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         if (id == R.id.live_view) {
             MapsFragment fragment = new MapsFragment();
-            fragmentTransaction.replace(R.id.fragment_home, fragment);
+            fragmentTransaction.replace(R.id.main_frag, fragment);
             fragmentTransaction.commit();
             return true;
         }
         else if (id == R.id.debug) {
             DebugFragment fragment = new DebugFragment();
-            fragmentTransaction.replace(R.id.fragment_home, fragment);
+            fragmentTransaction.replace(R.id.main_frag, fragment);
             fragmentTransaction.commit();
             return true;
         }
@@ -176,5 +177,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+
     }
 }
