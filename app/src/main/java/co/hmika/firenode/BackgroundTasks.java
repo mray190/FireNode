@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
@@ -14,6 +15,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.text.format.Formatter;
 import android.util.Log;
@@ -46,6 +48,8 @@ public class BackgroundTasks extends Service implements GoogleApiClient.Connecti
     static final int START_LOCATION_LISTENER = 2;
     static final int STOP_LOCATION_LISTENER = 3;
 
+    private SharedPreferences sharedPref;
+
     /**
      * Run when the service has been created but before the service is actually run
      */
@@ -60,6 +64,8 @@ public class BackgroundTasks extends Service implements GoogleApiClient.Connecti
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
+
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         mainWifiObj = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         mainWifiObj.createWifiLock(WifiManager.WIFI_MODE_SCAN_ONLY,"scan_wifi_lock");
@@ -158,7 +164,7 @@ public class BackgroundTasks extends Service implements GoogleApiClient.Connecti
                     dp.wifi_dist = Math.pow(10,exp);
                     if (dp.wifi_bssid.equals(currentBSSID)) dp.wifi_ip = currentIP;
                     dparray.add(dp);
-                    fb.sendEvent(dp);
+                    if (sharedPref.getBoolean("logging",false)) fb.sendEvent(dp);
                 }
 //                        mainWifiObj.calculateSignalLevel();
             }
