@@ -20,7 +20,7 @@ public class FirebaseManager {
 
     public void sendEvent(DataPacket packet) {
         long unixTime = System.currentTimeMillis() / 1000L;
-        Firebase curr_ref = ref.child(Long.toString(unixTime)).child(packet.wifi_bssid);
+        Firebase curr_ref = ref.child("raw_data").child(Long.toString(unixTime)).child(packet.wifi_bssid);
         curr_ref.setValue(packet);
     }
 }

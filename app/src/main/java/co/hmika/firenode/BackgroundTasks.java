@@ -14,6 +14,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.support.annotation.Nullable;
+import android.text.format.Formatter;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -30,10 +31,14 @@ public class BackgroundTasks extends Service implements GoogleApiClient.Connecti
     private WifiManager mainWifiObj;
     private FirebaseManager fb;
     private WifiHandler wifiReciever;
+    private WifiInfoHandler wifiInfoHandler;
 
     private GoogleApiClient locationClient;
     private LocationRequest locationRequest;
     private Location myLocation;
+
+    private String currentBSSID;
+    private String currentIP;
 
     static final int START_WIFI_LISTENER = 0;
     static final int STOP_WIFI_LISTENER = 1;
@@ -59,6 +64,7 @@ public class BackgroundTasks extends Service implements GoogleApiClient.Connecti
         mainWifiObj.createWifiLock(WifiManager.WIFI_MODE_SCAN_ONLY,"scan_wifi_lock");
         fb = new FirebaseManager();
         wifiReciever = new WifiHandler();
+        wifiInfoHandler = new WifiInfoHandler();
     }
 
     @Override
@@ -135,17 +141,18 @@ public class BackgroundTasks extends Service implements GoogleApiClient.Connecti
             ArrayList<DataPacket> dparray = new ArrayList<>();
             if (myLocation==null) return;
             for (int i=0; i<wifiScanList.size(); i++) {
-                DataPacket dp = new DataPacket();
-                dp.gps_acc = myLocation.getAccuracy();
-                dp.gps_lat = myLocation.getLatitude();
-                dp.gps_lon = myLocation.getLongitude();
-                dp.wifi_bssid = wifiScanList.get(i).BSSID;
-                dp.wifi_strength = wifiScanList.get(i).level;
-                dp.wifi_freq = wifiScanList.get(i).frequency;
-                dp.wifi_ssid = wifiScanList.get(i).SSID;
-                if (dp.wifi_ssid.equals("MWireless") ||dp.wifi_ssid.equals("MHacks")) {
+                if (wifiScanList.get(i).SSID.equals("MWireless") || wifiScanList.get(i).SSID.equals("MHacks")) {
+                    DataPacket dp = new DataPacket();
+                    dp.gps_acc = myLocation.getAccuracy();
+                    dp.gps_lat = myLocation.getLatitude();
+                    dp.gps_lon = myLocation.getLongitude();
+                    dp.wifi_bssid = wifiScanList.get(i).BSSID;
+                    dp.wifi_strength = wifiScanList.get(i).level;
+                    dp.wifi_freq = wifiScanList.get(i).frequency;
+                    dp.wifi_ssid = wifiScanList.get(i).SSID;
                     double exp = (27.55-(20.0*Math.log10(dp.wifi_freq))+Math.abs(dp.wifi_strength))/20.0;
                     dp.wifi_dist = Math.pow(10,exp);
+                    if (dp.wifi_bssid.equals(currentBSSID)) dp.wifi_ip = currentIP;
                     dparray.add(dp);
                     fb.sendEvent(dp);
                 }
@@ -155,11 +162,20 @@ public class BackgroundTasks extends Service implements GoogleApiClient.Connecti
         }
     }
 
+    private class WifiInfoHandler extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            currentBSSID = mainWifiObj.getConnectionInfo().getBSSID();
+            currentIP = Formatter.formatIpAddress(mainWifiObj.getConnectionInfo().getIpAddress());
+        }
+    }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("FireNode", "Info - Background Tasks service started");
         locationClient.connect();
         registerReceiver(wifiReciever, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        registerReceiver(wifiInfoHandler, new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION));
         return Service.START_NOT_STICKY;
     }
 

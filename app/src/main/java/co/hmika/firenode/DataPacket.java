@@ -11,4 +11,5 @@ public class DataPacket {
     public int wifi_freq;
     public String wifi_ssid;
     public double wifi_dist;
+    public String wifi_ip;
 }
