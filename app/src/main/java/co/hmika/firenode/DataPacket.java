@@ -6,7 +6,6 @@ public class DataPacket {
     public double gps_lon;
     public double gps_acc;
     public double wifi_strength;
-    public String wifi_mac;
     public String wifi_bssid;
     public String wifi_gate;
     public int wifi_freq;

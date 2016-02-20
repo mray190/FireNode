@@ -21,7 +21,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,6 +31,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private WifiManager mainWifiObj;
     private static final int LOCATION_PERMISSION_IDENTIFIER = 0;
     private FirebaseManager fb;
+    private WifiHandler wifiReciever;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,14 +58,20 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        setupWifiListener();
+        mainWifiObj = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        mainWifiObj.createWifiLock(WifiManager.WIFI_MODE_SCAN_ONLY,"scan_wifi_lock");
+        fb = new FirebaseManager();
+        wifiReciever = new WifiHandler();
+        registerReceiver(wifiReciever, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
     }
 
-    private void setupWifiListener() {
-        mainWifiObj = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        fb = new FirebaseManager();
-        WifiHandler wifiReciever = new WifiHandler();
-        registerReceiver(wifiReciever, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+    protected void onPause() {
+//        unregisterReceiver(wifiReciever);
+        super.onPause();
+    }
+
+    protected void onResume() {
+        super.onResume();
     }
 
     private class WifiHandler extends BroadcastReceiver {
@@ -75,13 +81,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 if (locationSettingsEnabled()) {
                     List<ScanResult> wifiScanList = mainWifiObj.getScanResults();
                     for (int i=0; i<wifiScanList.size(); i++) {
-                        String data = wifiScanList.get(i).toString();
                         DataPacket dp = new DataPacket();
                         dp.wifi_bssid = wifiScanList.get(i).BSSID;
                         dp.wifi_strength = wifiScanList.get(i).level;
                         dp.wifi_freq = wifiScanList.get(i).frequency;
                         dp.wifi_ssid = wifiScanList.get(i).SSID;
-                        fb.sendEvent(dp, wifiScanList.get(i).timestamp);
+                        fb.sendEvent(dp, i);
+//                        mainWifiObj.calculateSignalLevel();
                     }
                 } else {
                     startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
