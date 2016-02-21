@@ -3,4 +3,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="density_grade1">#1Abf28d2</color> //10%
+    <color name="density_grade2">#34bf28d2</color> //20%
+    <color name="density_grade3">#4Ebf28d2</color> //30%
+    <color name="density_grade4">#68bf28d2</color> //40%
+    <color name="density_grade5">#82bf28d2</color> //50%
 </resources>

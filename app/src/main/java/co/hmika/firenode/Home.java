@@ -60,7 +60,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         MapsFragment fragment = new MapsFragment();
-        fragmentTransaction.add(R.id.placeholder, fragment).commit();
+        fragmentTransaction.add(R.id.placeholder, fragment);
+        fragmentTransaction.isAddToBackStackAllowed();
+        fragmentTransaction.commit();
         currFragment = fragment;
 
         currFragment = fragmentManager.findFragmentById(R.id.placeholder);
@@ -212,6 +214,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         }
         else if (id == R.id.debug) {
             DebugFragment fragment = new DebugFragment();
+            currFragment = fragment;
+            fragmentTransaction.replace(R.id.placeholder, fragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        }
+        else if (id == R.id.action_settings) {
+            InstructionsFragment fragment = new InstructionsFragment();
             currFragment = fragment;
             fragmentTransaction.replace(R.id.placeholder, fragment);
             fragmentTransaction.addToBackStack(null);
