@@ -25,7 +25,7 @@ public class FirebaseManager {
                 if (fireNode.map!=null) {
                     new_router.setCircle(fireNode.map.addCircle(new CircleOptions().center(new LatLng(new_router.getGps_lat(),
                             new_router.getGps_lon())).radius(new_router.getRange())
-                            .strokeColor(Color.RED)
+                            .strokeColor(Color.GREEN)
                             .strokeWidth(1)
                             .fillColor(Color.parseColor("#3300ff00"))));
                 }

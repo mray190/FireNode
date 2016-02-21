@@ -73,7 +73,7 @@ public class MarkerAnimation {
                 return latLngInterpolator.interpolate(fraction, startValue, endValue);
             }
         };
-        Property<Circle, LatLng> property = Property.of(Circle.class, LatLng.class, "position");
+        Property<Circle, LatLng> property = Property.of(Circle.class, LatLng.class, "center");
         ObjectAnimator animator = ObjectAnimator.ofObject(marker, property, typeEvaluator, finalPosition);
         animator.setDuration(1000);
         animator.start();
