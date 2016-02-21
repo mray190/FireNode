@@ -148,7 +148,7 @@ public class BackgroundTasks extends Service implements GoogleApiClient.Connecti
             ArrayList<DataPacket> dparray = new ArrayList<>();
             if (myLocation==null) return;
             for (int i=0; i<wifiScanList.size(); i++) {
-                if (wifiScanList.get(i).SSID.equals("MWireless") || wifiScanList.get(i).SSID.equals("MHacks")) {
+                if (wifiScanList.get(i).SSID.equals("MWireless")) {
                     DataPacket dp = new DataPacket();
                     String manufacturer = Build.MANUFACTURER;
                     String model = Build.MODEL;
