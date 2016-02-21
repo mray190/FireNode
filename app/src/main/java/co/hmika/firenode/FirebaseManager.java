@@ -1,21 +1,20 @@
 package co.hmika.firenode;
 
-import android.util.Log;
+import android.graphics.Color;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-
-import java.util.HashMap;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
 
 public class FirebaseManager {
 
     private FireNode fireNode;
     private Firebase ref;
-    public HashMap<String, Router> router_list;
 
-    public FirebaseManager(FireNode fireNode0) {
+    public FirebaseManager(final FireNode fireNode0) {
         this.fireNode = fireNode0;
         ref = new Firebase("https://firenodemhacks.firebaseio.com/");
         ref.child("parse_data").addChildEventListener(new ChildEventListener() {
@@ -23,18 +22,40 @@ public class FirebaseManager {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Router new_router = dataSnapshot.getValue(Router.class);
                 new_router.setBssid(dataSnapshot.getKey());
-                Log.d("FireNode", new_router.toString());
+                if (fireNode.map!=null) {
+                    new_router.setCircle(fireNode.map.addCircle(new CircleOptions().center(new LatLng(new_router.getGps_lat(),
+                            new_router.getGps_lon())).radius(new_router.getRange())
+                            .strokeColor(Color.GREEN)
+                            .strokeWidth(1)
+                            .fillColor(Color.parseColor("#3300ff00"))));
+                }
                 fireNode.router_list.put(new_router.getBssid(), new_router);
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Log.d("FireNode", "Child changed: " + dataSnapshot.getValue().toString());
+                Router new_router = dataSnapshot.getValue(Router.class);
+                new_router.setBssid(dataSnapshot.getKey());
+                if (fireNode.map!=null) {
+                    new_router.setCircle(fireNode.router_list.get(new_router.getBssid()).getCircle());
+                    new_router.getCircle().setRadius(new_router.getRange());
+                    new_router.getCircle().setFillColor(Color.parseColor("#3300ff00"));
+                    MarkerAnimation.animateMarkerToICS(fireNode.router_list.get(new_router.getBssid()).getCircle(), new LatLng(new_router.getGps_lat(),
+                            new_router.getGps_lon()), new LatLngInterpolator() {
+                        @Override
+                        public LatLng interpolate(float fraction, LatLng a, LatLng b) {
+                            double lat = (b.latitude - a.latitude) * fraction + a.latitude;
+                            double lng = (b.longitude - a.longitude) * fraction + a.longitude;
+                            return new LatLng(lat, lng);
+                        }
+                    });
+                }
+                fireNode.router_list.put(new_router.getBssid(), new_router);
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Log.d("FireNode", "Child removed: " + dataSnapshot.getValue().toString());
+                fireNode.router_list.remove(dataSnapshot.getKey());
             }
 
             @Override
