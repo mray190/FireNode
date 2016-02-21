@@ -11,13 +11,14 @@ import android.util.Property;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 
+import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 public class MarkerAnimation {
 
-    static void animateMarkerToGB(final Marker marker, final LatLng finalPosition, final LatLngInterpolator latLngInterpolator) {
-        final LatLng startPosition = marker.getPosition();
+    static void animateMarkerToGB(final Circle marker, final LatLng finalPosition, final LatLngInterpolator latLngInterpolator) {
+        final LatLng startPosition = marker.getCenter();
         final Handler handler = new Handler();
         final long start = SystemClock.uptimeMillis();
         final Interpolator interpolator = new AccelerateDecelerateInterpolator();
@@ -35,7 +36,7 @@ public class MarkerAnimation {
                 t = elapsed / durationInMs;
                 v = interpolator.getInterpolation(t);
 
-                marker.setPosition(latLngInterpolator.interpolate(v, startPosition, finalPosition));
+                marker.setCenter(latLngInterpolator.interpolate(v, startPosition, finalPosition));
 
                 // Repeat till progress is complete.
                 if (t < 1) {
@@ -65,14 +66,14 @@ public class MarkerAnimation {
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    static void animateMarkerToICS(Marker marker, LatLng finalPosition, final LatLngInterpolator latLngInterpolator) {
+    static void animateMarkerToICS(Circle marker, LatLng finalPosition, final LatLngInterpolator latLngInterpolator) {
         TypeEvaluator<LatLng> typeEvaluator = new TypeEvaluator<LatLng>() {
             @Override
             public LatLng evaluate(float fraction, LatLng startValue, LatLng endValue) {
                 return latLngInterpolator.interpolate(fraction, startValue, endValue);
             }
         };
-        Property<Marker, LatLng> property = Property.of(Marker.class, LatLng.class, "position");
+        Property<Circle, LatLng> property = Property.of(Circle.class, LatLng.class, "position");
         ObjectAnimator animator = ObjectAnimator.ofObject(marker, property, typeEvaluator, finalPosition);
         animator.setDuration(1000);
         animator.start();

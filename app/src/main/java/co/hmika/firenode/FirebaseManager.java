@@ -1,11 +1,13 @@
 package co.hmika.firenode;
 
+import android.graphics.Color;
+
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 public class FirebaseManager {
 
@@ -21,8 +23,11 @@ public class FirebaseManager {
                 Router new_router = dataSnapshot.getValue(Router.class);
                 new_router.setBssid(dataSnapshot.getKey());
                 if (fireNode.map!=null) {
-                    new_router.setMarker(fireNode.map.addMarker(new MarkerOptions().position(new LatLng(new_router.getGps_lat(),
-                            new_router.getGps_lon())).title(new_router.getName())));
+                    new_router.setCircle(fireNode.map.addCircle(new CircleOptions().center(new LatLng(new_router.getGps_lat(),
+                            new_router.getGps_lon())).radius(new_router.getRange())
+                            .strokeColor(Color.RED)
+                            .strokeWidth(1)
+                            .fillColor(Color.parseColor("#3300ff00"))));
                 }
                 fireNode.router_list.put(new_router.getBssid(), new_router);
             }
@@ -32,8 +37,10 @@ public class FirebaseManager {
                 Router new_router = dataSnapshot.getValue(Router.class);
                 new_router.setBssid(dataSnapshot.getKey());
                 if (fireNode.map!=null) {
-                    new_router.setMarker(fireNode.router_list.get(new_router.getBssid()).getMarker());
-                    MarkerAnimation.animateMarkerToICS(fireNode.router_list.get(new_router.getBssid()).getMarker(), new LatLng(new_router.getGps_lat(),
+                    new_router.setCircle(fireNode.router_list.get(new_router.getBssid()).getCircle());
+                    new_router.getCircle().setRadius(new_router.getRange());
+                    new_router.getCircle().setFillColor(Color.parseColor("#3300ff00"));
+                    MarkerAnimation.animateMarkerToICS(fireNode.router_list.get(new_router.getBssid()).getCircle(), new LatLng(new_router.getGps_lat(),
                             new_router.getGps_lon()), new LatLngInterpolator() {
                         @Override
                         public LatLng interpolate(float fraction, LatLng a, LatLng b) {

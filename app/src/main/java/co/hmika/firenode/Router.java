@@ -1,6 +1,6 @@
 package co.hmika.firenode;
 
-import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.Circle;
 
 /**
  * Created by mray on 2/20/16.
@@ -12,7 +12,7 @@ public class Router {
     private String name;
     private int num_conn;
 
-    private Marker marker;
+    private Circle circle;
 
     public double getRange() {
         return range;
@@ -69,11 +69,11 @@ public class Router {
         return "BSSID: " + bssid + " Lat: " + gps_lat + " Lon: " + gps_lon + " Name: " + name + " Num Connections: " + num_conn + " Range: " + range;
     }
 
-    public Marker getMarker() {
-        return marker;
+    public Circle getCircle() {
+        return circle;
     }
 
-    public void setMarker(Marker marker) {
-        this.marker = marker;
+    public void setCircle(Circle circle) {
+        this.circle = circle;
     }
 }
