@@ -31,10 +31,17 @@ public class FirebaseManager {
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 Router new_router = dataSnapshot.getValue(Router.class);
                 new_router.setBssid(dataSnapshot.getKey());
-                fireNode.router_list.get(new_router.getBssid()).getMarker().remove();
                 if (fireNode.map!=null) {
-                    new_router.setMarker(fireNode.map.addMarker(new MarkerOptions().position(new LatLng(new_router.getGps_lat(),
-                            new_router.getGps_lon())).title(new_router.getName())));
+                    new_router.setMarker(fireNode.router_list.get(new_router.getBssid()).getMarker());
+                    MarkerAnimation.animateMarkerToICS(fireNode.router_list.get(new_router.getBssid()).getMarker(), new LatLng(new_router.getGps_lat(),
+                            new_router.getGps_lon()), new LatLngInterpolator() {
+                        @Override
+                        public LatLng interpolate(float fraction, LatLng a, LatLng b) {
+                            double lat = (b.latitude - a.latitude) * fraction + a.latitude;
+                            double lng = (b.longitude - a.longitude) * fraction + a.longitude;
+                            return new LatLng(lat, lng);
+                        }
+                    });
                 }
                 fireNode.router_list.put(new_router.getBssid(), new_router);
             }
