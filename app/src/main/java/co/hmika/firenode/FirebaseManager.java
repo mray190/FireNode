@@ -22,6 +22,7 @@ public class FirebaseManager {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Router new_router = dataSnapshot.getValue(Router.class);
                 new_router.setBssid(dataSnapshot.getKey());
+                if (new_router.getGps_lat()==0 || new_router.getGps_lon()==0 || new_router.getRange()==0) return;
                 if (fireNode.map!=null) {
                     new_router.setCircle(fireNode.map.addCircle(new CircleOptions().center(new LatLng(new_router.getGps_lat(),
                             new_router.getGps_lon())).radius(new_router.getRange())
@@ -36,6 +37,7 @@ public class FirebaseManager {
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 Router new_router = dataSnapshot.getValue(Router.class);
                 new_router.setBssid(dataSnapshot.getKey());
+                if (new_router.getGps_lat()==0 || new_router.getGps_lon()==0 || new_router.getRange()==0) return;
                 if (fireNode.map!=null) {
                     new_router.setCircle(fireNode.router_list.get(new_router.getBssid()).getCircle());
                     new_router.getCircle().setRadius(new_router.getRange());
